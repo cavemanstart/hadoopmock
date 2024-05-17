@@ -3,6 +3,7 @@ module hadoopmock
 go 1.22
 
 require (
+	github.com/jinzhu/now v1.1.5
 	github.com/zeromicro/go-zero v1.6.5
 	go.mongodb.org/mongo-driver v1.15.0
 )
