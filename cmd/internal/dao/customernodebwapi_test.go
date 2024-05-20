@@ -6,21 +6,7 @@ import (
 	"testing"
 )
 
-var (
-	nodeMomentDataList = []*hadoop.NodeMomentData{
-		&hadoop.NodeMomentData{
-			NodeId:    "3279ng9438",
-			Bandwidth: 3200,
-		},
-		&hadoop.NodeMomentData{
-			NodeId:    "n948790v438",
-			Bandwidth: 3000,
-		},
-	}
-	nodeBwMockData = hadoop.NodeMomentDataList{Id: "test", NodeMomentDataList: nodeMomentDataList}
-)
-
-func TestInsertVendorNodeBwModel(t *testing.T) {
+func TestInsertCustomerNodeBwModel(t *testing.T) {
 	type args struct {
 		data *hadoop.NodeMomentDataList
 	}
@@ -32,12 +18,12 @@ func TestInsertVendorNodeBwModel(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			InsertVendorNodeBwModel(tt.args.data)
+			InsertCustomerNodeBwModel(tt.args.data)
 		})
 	}
 }
 
-func TestFindVendorNodeBwModelApiById(t *testing.T) {
+func TestFindCustomerNodeBwModelApiById(t *testing.T) {
 	type args struct {
 		id string
 	}
@@ -56,15 +42,15 @@ func TestFindVendorNodeBwModelApiById(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			InsertVendorNodeBwModel(&nodeBwMockData)
-			if got := FindVendorNodeBwModelApiById(tt.args.id); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FindVendorNodeBwModelApiById() = %v, want %v", got, tt.want)
+			InsertCustomerNodeBwModel(&nodeBwMockData)
+			if got := FindCustomerNodeBwModelApiById(tt.args.id); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FindCustomerNodeBwModelApiById() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestUpdateVendorNodeBwModel(t *testing.T) {
+func TestUpdateCustomerNodeBwModel(t *testing.T) {
 	type args struct {
 		data *hadoop.NodeMomentDataList
 	}
@@ -76,12 +62,12 @@ func TestUpdateVendorNodeBwModel(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			UpdateVendorNodeBwModel(tt.args.data)
+			UpdateCustomerNodeBwModel(tt.args.data)
 		})
 	}
 }
 
-func TestDeleteVendorNodeBwModel(t *testing.T) {
+func TestDeleteCustomerNodeBwModel(t *testing.T) {
 	type args struct {
 		id string
 	}
@@ -93,7 +79,7 @@ func TestDeleteVendorNodeBwModel(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			DeleteVendorNodeBwModel(tt.args.id)
+			DeleteCustomerNodeBwModel(tt.args.id)
 		})
 	}
 }

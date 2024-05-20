@@ -86,6 +86,10 @@ type (
 		Bandwidth int64 `json:"bandwidth"` // 计量值，单位：bps
 		Time      int64 `json:"time"`      // 当前计量值所处时刻，时间戳，秒
 	}
+	MeasureCommonUnitList struct {
+		Id                    string               `bson:"_id" json:"id"`
+		MeasureCommonUnitList []*MeasureCommonUnit `bson:"measureCommonUnitList" json:"measureCommonUnitList"`
+	}
 
 	GetMomentNode struct {
 		NodeId string `json:"nodeId"` // 节点 Id
@@ -99,7 +103,7 @@ type (
 		Time      int64  `bson:"time" json:"time"`           // 时刻值，时间戳，秒
 	}
 
-	VendorNodeMomentData struct {
+	NodeMomentDataList struct {
 		Id                 string            `bson:"_id" json:"id"`
 		NodeMomentDataList []*NodeMomentData `bson:"nodeMomentDataList" json:"nodeMomentDataList,omitempty"`
 	}

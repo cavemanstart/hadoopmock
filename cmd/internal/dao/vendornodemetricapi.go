@@ -22,32 +22,32 @@ func InsertVendorNodeMetricModel(data *hadoop.MeasureCommonData) {
 	if resData == nil {
 		err := vendorNodeMetricApiModel.Insert(context.Background(), data)
 		if err != nil {
-			log.Fatal(err, "measure api insert failed")
+			log.Fatal(err, "insert failed")
 		}
-		log.Println("measure api insert succeed")
+		log.Println("insert succeed")
 	}
 }
 func DeleteVendorNodeMetricModel(id string) {
 	err := vendorNodeMetricApiModel.DeleteById(context.Background(), id)
 	if err != nil {
-		log.Fatal(err, "measure api delete failed")
+		log.Fatal(err, "delete failed")
 	}
-	log.Println("measure api delete succeed")
+	log.Println("delete succeed")
 }
 
 func UpdateVendorNodeMetricModel(data *hadoop.MeasureCommonData) {
 	err := vendorNodeMetricApiModel.Update(context.Background(), data)
 	if err != nil {
-		log.Fatal(err, "measure api update failed")
+		log.Fatal(err, "update failed")
 	}
-	log.Println("measure api update succeed")
+	log.Println("update succeed")
 }
 
 func FindVendorNodeMetricModelApiById(id string) *hadoop.MeasureCommonData {
 	resData, err := vendorNodeMetricApiModel.FindById(context.Background(), id)
 	if err != nil {
-		log.Fatal(err, " measure api query failed")
+		log.Fatal(err, "query failed")
 	}
-	log.Println(" measure api query succeed")
+	log.Println("query succeed")
 	return resData
 }

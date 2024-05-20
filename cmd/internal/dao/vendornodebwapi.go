@@ -17,37 +17,37 @@ func init() {
 	mongoConfig := config.ReadConfig()
 	vendorNodeBwApiModel = model.NewVendorNodeBwApiModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
 }
-func InsertVendorNodeBwModel(data *hadoop.VendorNodeMomentData) {
+func InsertVendorNodeBwModel(data *hadoop.NodeMomentDataList) {
 	resData := FindVendorNodeBwModelApiById(data.Id)
 	if resData == nil {
 		err := vendorNodeBwApiModel.Insert(context.Background(), data)
 		if err != nil {
-			log.Fatal(err, "measure api insert failed")
+			log.Fatal(err, "insert failed")
 		}
-		log.Println("measure api insert succeed")
+		log.Println("insert succeed")
 	}
 }
 func DeleteVendorNodeBwModel(id string) {
 	err := vendorNodeBwApiModel.DeleteById(context.Background(), id)
 	if err != nil {
-		log.Fatal(err, "measure api delete failed")
+		log.Fatal(err, "delete failed")
 	}
-	log.Println("measure api delete succeed")
+	log.Println("delete succeed")
 }
 
-func UpdateVendorNodeBwModel(data *hadoop.VendorNodeMomentData) {
+func UpdateVendorNodeBwModel(data *hadoop.NodeMomentDataList) {
 	err := vendorNodeBwApiModel.Update(context.Background(), data)
 	if err != nil {
-		log.Fatal(err, "measure api update failed")
+		log.Fatal(err, "update failed")
 	}
-	log.Println("measure api update succeed")
+	log.Println("update succeed")
 }
 
-func FindVendorNodeBwModelApiById(id string) *hadoop.VendorNodeMomentData {
+func FindVendorNodeBwModelApiById(id string) *hadoop.NodeMomentDataList {
 	resData, err := vendorNodeBwApiModel.FindById(context.Background(), id)
 	if err != nil {
-		log.Fatal(err, " measure api query failed")
+		log.Fatal(err, " query failed")
 	}
-	log.Println(" measure api query succeed")
+	log.Println(" query succeed")
 	return resData
 }
