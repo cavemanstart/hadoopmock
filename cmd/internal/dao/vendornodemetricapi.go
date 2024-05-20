@@ -2,21 +2,22 @@ package dao
 
 import (
 	"context"
+	"log"
+
+	"hadoopmock/cmd/internal/config"
 	"hadoopmock/cmd/internal/hadoop"
 	"hadoopmock/cmd/internal/model"
-	"log"
 )
 
 var (
-	mongoUrl                        = "mongodb://localhost:27017"
-	mongoDb                  string = "hadoop"
 	vendorNodeMetricApiModel model.VendorNodeMetricApiModel
 )
 
+func init() {
+	mongoConfig := config.ReadConfig()
+	vendorNodeMetricApiModel = model.NewVendorNodeMetricApiModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
+}
 func InsertVendorNodeMetricModel(data *hadoop.MeasureCommonData) {
-	if vendorNodeMetricApiModel == nil {
-		vendorNodeMetricApiModel = model.NewVendorNodeMetricApiModel(mongoUrl, mongoDb)
-	}
 	resData := FindVendorNodeMetricModelApiById(data.Id)
 	if resData == nil {
 		err := vendorNodeMetricApiModel.Insert(context.Background(), data)
@@ -27,9 +28,6 @@ func InsertVendorNodeMetricModel(data *hadoop.MeasureCommonData) {
 	}
 }
 func DeleteVendorNodeMetricModel(id string) {
-	if vendorNodeMetricApiModel == nil {
-		vendorNodeMetricApiModel = model.NewVendorNodeMetricApiModel(mongoUrl, mongoDb)
-	}
 	err := vendorNodeMetricApiModel.DeleteById(context.Background(), id)
 	if err != nil {
 		log.Fatal(err, "measure api delete failed")
@@ -38,9 +36,6 @@ func DeleteVendorNodeMetricModel(id string) {
 }
 
 func UpdateVendorNodeMetricModel(data *hadoop.MeasureCommonData) {
-	if vendorNodeMetricApiModel == nil {
-		vendorNodeMetricApiModel = model.NewVendorNodeMetricApiModel(mongoUrl, mongoDb)
-	}
 	err := vendorNodeMetricApiModel.Update(context.Background(), data)
 	if err != nil {
 		log.Fatal(err, "measure api update failed")
@@ -49,9 +44,6 @@ func UpdateVendorNodeMetricModel(data *hadoop.MeasureCommonData) {
 }
 
 func FindVendorNodeMetricModelApiById(id string) *hadoop.MeasureCommonData {
-	if vendorNodeMetricApiModel == nil {
-		vendorNodeMetricApiModel = model.NewVendorNodeMetricApiModel(mongoUrl, mongoDb)
-	}
 	resData, err := vendorNodeMetricApiModel.FindById(context.Background(), id)
 	if err != nil {
 		log.Fatal(err, " measure api query failed")

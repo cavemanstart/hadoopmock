@@ -6,6 +6,7 @@ require (
 	github.com/jinzhu/now v1.1.5
 	github.com/zeromicro/go-zero v1.6.5
 	go.mongodb.org/mongo-driver v1.15.0
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (

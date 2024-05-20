@@ -15,5 +15,4 @@ func randomString(length int) (string, error) {
 }
 
 func main() {
-
 }

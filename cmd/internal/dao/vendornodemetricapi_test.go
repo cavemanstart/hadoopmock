@@ -1,9 +1,10 @@
 package dao
 
 import (
-	"github.com/jinzhu/now"
 	"reflect"
 	"testing"
+
+	"github.com/jinzhu/now"
 
 	"hadoopmock/cmd/internal/hadoop"
 )
@@ -15,7 +16,7 @@ var (
 		"2023-06-03": {Time: now.BeginningOfDay().Unix(), Bandwidth: 0},
 		"2023-06-04": {Time: now.BeginningOfDay().Unix(), Bandwidth: 0},
 	}
-	mockData = hadoop.MeasureCommonData{Id: "test", DayPeak: dayPeak, Peak: hadoop.MeasureCommonUnit{Bandwidth: 5000}}
+	nodeMetricMockData = hadoop.MeasureCommonData{Id: "test", DayPeak: dayPeak, Peak: hadoop.MeasureCommonUnit{Bandwidth: 5000}}
 )
 
 func TestInsertVendorNodeMetricModel(t *testing.T) {
@@ -26,7 +27,7 @@ func TestInsertVendorNodeMetricModel(t *testing.T) {
 		name string
 		args args
 	}{
-		{"case1", args{&mockData}},
+		{"case1", args{&nodeMetricMockData}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -45,16 +46,16 @@ func TestFindVendorNodeMetricModelApiById(t *testing.T) {
 		want *hadoop.MeasureCommonData
 	}{
 		{
-			name: "case1",
+			name: "case2",
 			args: args{
 				id: "test",
 			},
-			want: &mockData,
+			want: &nodeMetricMockData,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			InsertVendorNodeMetricModel(&mockData)
+			InsertVendorNodeMetricModel(&nodeMetricMockData)
 			if got := FindVendorNodeMetricModelApiById(tt.args.id); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("FindVendorNodeMetricModelApiById() = %v, want %v", got, tt.want)
 			}
@@ -70,7 +71,7 @@ func TestUpdateVendorNodeMetricModel(t *testing.T) {
 		name string
 		args args
 	}{
-		{name: "case1", args: args{data: &mockData}},
+		{name: "case3", args: args{data: &nodeMetricMockData}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -88,7 +89,7 @@ func TestDeleteVendorNodeMetricModel(t *testing.T) {
 		name string
 		args args
 	}{
-		{"case1", args{id: "test"}},
+		{"case4", args{id: "test"}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

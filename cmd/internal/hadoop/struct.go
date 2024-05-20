@@ -94,9 +94,14 @@ type (
 
 	// NodeMomentData 节点时刻公用 data
 	NodeMomentData struct {
-		NodeId    string `json:"nodeId"`
-		Bandwidth int64  `json:"bandwidth"` // 计量值，单位：bps
-		Time      int64  `json:"time"`      // 时刻值，时间戳，秒
+		NodeId    string `bson:"nodeId" json:"nodeId"`
+		Bandwidth int64  `bson:"bandwidth" json:"bandwidth"` // 计量值，单位：bps
+		Time      int64  `bson:"time" json:"time"`           // 时刻值，时间戳，秒
+	}
+
+	VendorNodeMomentData struct {
+		Id                 string            `bson:"_id" json:"id"`
+		NodeMomentDataList []*NodeMomentData `bson:"nodeMomentDataList" json:"nodeMomentDataList,omitempty"`
 	}
 
 	TimeQuantum struct {
