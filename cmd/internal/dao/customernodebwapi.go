@@ -10,12 +10,12 @@ import (
 )
 
 var (
-	CustomerNodeBwApiModel model.CustomerNodeBwApiModel
+	CustomerNodeBwApiModel model.CustomerNodeBwModel
 )
 
 func init() {
 	mongoConfig := config.ReadConfig()
-	CustomerNodeBwApiModel = model.NewCustomerNodeBwApiModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
+	CustomerNodeBwApiModel = model.NewCustomerNodeBwModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
 }
 func InsertCustomerNodeBwModel(data *hadoop.NodeMomentDataList) {
 	resData := FindCustomerNodeBwModelApiById(data.Id)

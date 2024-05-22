@@ -10,12 +10,12 @@ import (
 )
 
 var (
-	vendorNodeMetricApiModel model.VendorNodeMetricApiModel
+	vendorNodeMetricApiModel model.VendorNodeMetricModel
 )
 
 func init() {
 	mongoConfig := config.ReadConfig()
-	vendorNodeMetricApiModel = model.NewVendorNodeMetricApiModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
+	vendorNodeMetricApiModel = model.NewVendorNodeMetricModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
 }
 func InsertVendorNodeMetricModel(data *hadoop.MeasureCommonData) {
 	resData := FindVendorNodeMetricModelApiById(data.Id)

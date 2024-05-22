@@ -9,42 +9,42 @@ import (
 )
 
 type (
-	CustomerNodeBwApiModel interface {
+	VendorNodeBwModel interface {
 		Insert(ctx context.Context, data *hadoop.NodeMomentDataList) error
 		Update(ctx context.Context, data *hadoop.NodeMomentDataList) error
 		DeleteById(ctx context.Context, id string) error
 		FindById(ctx context.Context, id string) (*hadoop.NodeMomentDataList, error)
 	}
-	CustomerNodeBwModel struct {
+	defaultVendorNodeBwModel struct {
 		*mon.Model
 	}
 )
 
-func NewCustomerNodeBwApiModel(url string, db string) CustomerNodeBwApiModel {
-	return &CustomerNodeBwModel{
-		Model: mon.MustNewModel(url, db, "customernodebw"),
+func NewVendorNodeBwModel(url string, db string) VendorNodeBwModel {
+	return &defaultVendorNodeBwModel{
+		Model: mon.MustNewModel(url, db, "vendorNodeBw"),
 	}
 }
 
-func (m *CustomerNodeBwModel) Insert(ctx context.Context, data *hadoop.NodeMomentDataList) error {
+func (m *defaultVendorNodeBwModel) Insert(ctx context.Context, data *hadoop.NodeMomentDataList) error {
 	_, err := m.InsertOne(ctx, data)
 	return err
 }
-func (m *CustomerNodeBwModel) Update(ctx context.Context, data *hadoop.NodeMomentDataList) error {
+func (m *defaultVendorNodeBwModel) Update(ctx context.Context, data *hadoop.NodeMomentDataList) error {
 	filter := bson.M{
 		"_id": data.Id,
 	}
 	_, err := m.UpdateOne(ctx, filter, bson.M{"$set": data})
 	return err
 }
-func (m *CustomerNodeBwModel) DeleteById(ctx context.Context, id string) error {
+func (m *defaultVendorNodeBwModel) DeleteById(ctx context.Context, id string) error {
 	filter := bson.M{
 		"_id": id,
 	}
 	_, err := m.DeleteMany(ctx, filter)
 	return err
 }
-func (m *CustomerNodeBwModel) FindById(ctx context.Context, id string) (*hadoop.NodeMomentDataList, error) {
+func (m *defaultVendorNodeBwModel) FindById(ctx context.Context, id string) (*hadoop.NodeMomentDataList, error) {
 	filter := bson.M{
 		"_id": id,
 	}

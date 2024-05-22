@@ -15,7 +15,7 @@ var (
 
 func init() {
 	mongoConfig := config.ReadConfig()
-	vendorNode5MinApiModel = model.NewVendorNode5MinApiModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
+	vendorNode5MinApiModel = model.NewVendorNode5MinModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
 }
 func InsertVendorNode5MinModel(data *hadoop.MeasureCommonUnitList) {
 	resData := FindVendorNode5MinModelApiById(data.Id)

@@ -14,7 +14,7 @@ var (
 
 func init() {
 	mongoConfig := config.ReadConfig()
-	CustomerNodeMetricApiModel = model.NewCustomerNodeMetricApiModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
+	CustomerNodeMetricApiModel = model.NewCustomerNodeMetricModel(mongoConfig.Mongo.Url, mongoConfig.Mongo.Database)
 }
 func InsertCustomerNodeMetricModel(data *hadoop.MeasureCommonData) {
 	resData := FindCustomerNodeMetricModelApiById(data.Id)
