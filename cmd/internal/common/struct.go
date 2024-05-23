@@ -1,4 +1,4 @@
-package hadoop
+package common
 
 import (
 	"encoding/json"
@@ -69,10 +69,11 @@ type (
 
 	// MeasureCommonData 计量公用的节点级别的 data
 	MeasureCommonDataPerNode struct {
-		NodeId   string                       `json:"nodeId"`
-		DayPeak  map[string]MeasureCommonUnit `json:"dayPeak"`  // 日带宽值(一天中的95值或峰值)
-		BillPeak MeasureCommonUnit            `json:"billPeak"` // 计费天数的区间带宽值(区间内的95值或峰值)，目前账单计费用此字段
-		Peak     MeasureCommonUnit            `json:"peak"`     // 区间带宽值(区间内的95值或峰值)
+		Id       string                       `bson:"_id,omitempty"  json:"id"`
+		NodeId   string                       `bson:"nodeId" json:"nodeId"`
+		DayPeak  map[string]MeasureCommonUnit `bson:"dayPeak" json:"dayPeak"`   // 日带宽值(一天中的95值或峰值)
+		BillPeak MeasureCommonUnit            `bson:"billPeak" json:"billPeak"` // 计费天数的区间带宽值(区间内的95值或峰值)，目前账单计费用此字段
+		Peak     MeasureCommonUnit            `bson:"peak" json:"peak"`         // 区间带宽值(区间内的95值或峰值)
 	}
 
 	// MeasureCommonData 计量公用 data
@@ -90,12 +91,30 @@ type (
 		Id                    string               `bson:"_id" json:"id"`
 		MeasureCommonUnitList []*MeasureCommonUnit `bson:"measureCommonUnitList" json:"measureCommonUnitList"`
 	}
-
+	LineBandWidthSeries struct {
+		Id            string                         `bson:"_id" json:"id"`
+		LineBandWidth map[string][]MeasureCommonUnit `bson:"lineBandWidth" json:"lineBandWidth"`
+	}
+	LineCommonUint struct {
+		Line      string `bson:"line" json:"line"`
+		Bandwidth int64  `bson:"bandwidth" json:"bandwidth"`
+	}
+	LineMomentBandWidth struct {
+		Id         string                      `bson:"_id" json:"id"`
+		LineMoment map[string][]LineCommonUint `bson:"lineCommonUint" json:"lineCommonUint"`
+	}
 	GetMomentNode struct {
 		NodeId string `json:"nodeId"` // 节点 Id
 		Time   int64  `json:"time"`   // 时刻值，时间戳，秒
 	}
-
+	NodePingLossRatioUnit struct {
+		NodeId string  `bson:"nodeId" json:"nodeId"`
+		Ratio  float64 `bson:"ratio" json:"ratio"`
+	}
+	PingLossNodeRatio struct {
+		Id            string                             `bson:"_id" json:"id"`
+		PingLossRatio map[string][]NodePingLossRatioUnit `bson:"pingLossRatio" json:"pingLossRatio"`
+	}
 	// NodeMomentData 节点时刻公用 data
 	NodeMomentData struct {
 		NodeId    string `bson:"nodeId" json:"nodeId"`

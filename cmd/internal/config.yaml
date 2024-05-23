@@ -1,3 +1,2 @@
-mongo:
-  url: "mongodb://localhost:27017"
-  database: "hadoopMock"
+MongoUrl: "mongodb://localhost:27017"
+MongoDatabase: "hadoopMock"

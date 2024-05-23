@@ -1,28 +1,16 @@
 package config
 
 import (
-	"fmt"
-	"gopkg.in/yaml.v2"
-	"os"
+	"github.com/zeromicro/go-zero/core/conf"
 )
 
-type MongoConfig struct {
-	Mongo struct {
-		Url      string `yaml:"url"`
-		Database string `yaml:"database"`
-	} `yaml:"mongo"`
+type Mongo struct {
+	MongoUrl      string
+	MongoDatabase string
 }
 
-func ReadConfig() *MongoConfig {
-	data, err := os.ReadFile("../config.yaml")
-	if err != nil {
-		return nil
-	}
-	var mongoConfig MongoConfig
-	err = yaml.Unmarshal(data, &mongoConfig)
-	fmt.Println("url", mongoConfig.Mongo.Url)
-	if err != nil {
-		return nil
-	}
-	return &mongoConfig
+func ReadMongoConfig() *Mongo {
+	var mgo Mongo
+	conf.MustLoad("cmd/internal/config.yaml", &mgo)
+	return &mgo
 }
