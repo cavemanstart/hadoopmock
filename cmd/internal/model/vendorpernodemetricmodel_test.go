@@ -8,7 +8,8 @@ import (
 	"hadoopmock/cmd/internal/common"
 )
 
-var perNodeMetricMockData = common.MeasureCommonDataPerNode{Id: "test", NodeId: "test-123456", DayPeak: dayPeak, Peak: common.MeasureCommonUnit{Bandwidth: 5000}}
+var perNodeMetricMockData = common.MeasureCommonDataPerNode{NodeId: "test-123456", DayPeak: dayPeak, Peak: common.MeasureCommonUnit{Bandwidth: 5000}}
+var nodeListMockData = common.MeasureCommonDataNodes{Id: "test-1110", NodeList: []*common.MeasureCommonDataPerNode{&perNodeMetricMockData}}
 
 func Test_defaultVendorPerNodeMetricModel_DeleteById(t *testing.T) {
 	defaultVendorPerNodeMetricModel := NewVendorPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
@@ -41,7 +42,7 @@ func Test_defaultVendorPerNodeMetricModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.MeasureCommonDataPerNode
+		want    *common.MeasureCommonDataNodes
 		wantErr bool
 	}{
 		{
@@ -50,7 +51,7 @@ func Test_defaultVendorPerNodeMetricModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &perNodeMetricMockData,
+			want:    &nodeListMockData,
 			wantErr: false,
 		},
 	}
@@ -74,14 +75,14 @@ func Test_defaultVendorPerNodeMetricModel_Insert(t *testing.T) {
 	defaultVendorPerNodeMetricModel := NewVendorPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonDataPerNode
+		data *common.MeasureCommonDataNodes
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &perNodeMetricMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &nodeListMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultVendorPerNodeMetricModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -99,14 +100,14 @@ func Test_defaultVendorPerNodeMetricModel_Update(t *testing.T) {
 	defaultVendorPerNodeMetricModel := NewVendorPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonDataPerNode
+		data *common.MeasureCommonDataNodes
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &perNodeMetricMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &nodeListMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

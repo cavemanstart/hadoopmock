@@ -10,10 +10,10 @@ import (
 
 type (
 	VendorPerNodeMetricModel interface {
-		Insert(ctx context.Context, data *common.MeasureCommonDataPerNode) error
-		Update(ctx context.Context, data *common.MeasureCommonDataPerNode) error
+		Insert(ctx context.Context, data *common.MeasureCommonDataNodes) error
+		Update(ctx context.Context, data *common.MeasureCommonDataNodes) error
 		DeleteById(ctx context.Context, id string) error
-		FindById(ctx context.Context, id string) (*common.MeasureCommonDataPerNode, error)
+		FindById(ctx context.Context, id string) (*common.MeasureCommonDataNodes, error)
 	}
 	defaultVendorPerNodeMetricModel struct {
 		*mon.Model
@@ -26,11 +26,11 @@ func NewVendorPerNodeMetricModel(url string, db string) VendorPerNodeMetricModel
 	}
 }
 
-func (m *defaultVendorPerNodeMetricModel) Insert(ctx context.Context, data *common.MeasureCommonDataPerNode) error {
+func (m *defaultVendorPerNodeMetricModel) Insert(ctx context.Context, data *common.MeasureCommonDataNodes) error {
 	_, err := m.InsertOne(ctx, data)
 	return err
 }
-func (m *defaultVendorPerNodeMetricModel) Update(ctx context.Context, data *common.MeasureCommonDataPerNode) error {
+func (m *defaultVendorPerNodeMetricModel) Update(ctx context.Context, data *common.MeasureCommonDataNodes) error {
 	filter := bson.M{
 		"_id": data.Id,
 	}
@@ -44,11 +44,11 @@ func (m *defaultVendorPerNodeMetricModel) DeleteById(ctx context.Context, id str
 	_, err := m.DeleteMany(ctx, filter)
 	return err
 }
-func (m *defaultVendorPerNodeMetricModel) FindById(ctx context.Context, id string) (*common.MeasureCommonDataPerNode, error) {
+func (m *defaultVendorPerNodeMetricModel) FindById(ctx context.Context, id string) (*common.MeasureCommonDataNodes, error) {
 	filter := bson.M{
 		"_id": id,
 	}
-	var res common.MeasureCommonDataPerNode
+	var res common.MeasureCommonDataNodes
 	err := m.FindOne(ctx, &res, filter)
 	switch {
 	case err == nil:

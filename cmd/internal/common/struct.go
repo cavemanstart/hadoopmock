@@ -68,8 +68,12 @@ type (
 	}
 
 	// MeasureCommonData 计量公用的节点级别的 data
+	MeasureCommonDataNodes struct {
+		Id       string                      `bson:"_id,omitempty"  json:"id"`
+		NodeList []*MeasureCommonDataPerNode `bson:"nodeList,omitempty"  json:"nodeList"`
+	}
+
 	MeasureCommonDataPerNode struct {
-		Id       string                       `bson:"_id,omitempty"  json:"id"`
 		NodeId   string                       `bson:"nodeId" json:"nodeId"`
 		DayPeak  map[string]MeasureCommonUnit `bson:"dayPeak" json:"dayPeak"`   // 日带宽值(一天中的95值或峰值)
 		BillPeak MeasureCommonUnit            `bson:"billPeak" json:"billPeak"` // 计费天数的区间带宽值(区间内的95值或峰值)，目前账单计费用此字段

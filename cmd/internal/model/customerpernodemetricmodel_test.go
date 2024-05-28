@@ -39,7 +39,7 @@ func Test_defaultCustomerPerNodeMetricModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.MeasureCommonDataPerNode
+		want    *common.MeasureCommonDataNodes
 		wantErr bool
 	}{
 		{
@@ -48,7 +48,7 @@ func Test_defaultCustomerPerNodeMetricModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &perNodeMetricMockData,
+			want:    &nodeListMockData,
 			wantErr: false,
 		},
 	}
@@ -72,14 +72,14 @@ func Test_defaultCustomerPerNodeMetricModel_Insert(t *testing.T) {
 	defaultCustomerPerNodeMetricModel := NewCustomerPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonDataPerNode
+		data *common.MeasureCommonDataNodes
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &perNodeMetricMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &nodeListMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultCustomerPerNodeMetricModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -97,14 +97,14 @@ func Test_defaultCustomerPerNodeMetricModel_Update(t *testing.T) {
 	defaultCustomerPerNodeMetricModel := NewCustomerPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonDataPerNode
+		data *common.MeasureCommonDataNodes
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &perNodeMetricMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &nodeListMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
