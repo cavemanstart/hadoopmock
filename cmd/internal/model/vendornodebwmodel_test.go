@@ -2,10 +2,17 @@ package model
 
 import (
 	"context"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 	"reflect"
 	"testing"
 )
+
+var vendorNodeBwMockData = types.VendorNodeBw{
+	Id: "test",
+	NodeMomentDataList: types.NodeMomentDataList{
+		NodeMomentDataList: nodeMomentDataList,
+	},
+}
 
 func Test_defaultVendorNodeBwModel_DeleteById(t *testing.T) {
 	defaultVendorNodeBwModel := NewVendorNodeBwModel("mongodb://localhost:27017", "hadoopMock")
@@ -38,7 +45,7 @@ func Test_defaultVendorNodeBwModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.NodeMomentDataList
+		want    *types.VendorNodeBw
 		wantErr bool
 	}{
 		{
@@ -47,7 +54,7 @@ func Test_defaultVendorNodeBwModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &nodeBwMockData,
+			want:    &vendorNodeBwMockData,
 			wantErr: false,
 		},
 	}
@@ -71,14 +78,14 @@ func Test_defaultVendorNodeBwModel_Insert(t *testing.T) {
 	defaultVendorNodeBwModel := NewVendorNodeBwModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.NodeMomentDataList
+		data *types.VendorNodeBw
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &nodeBwMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &vendorNodeBwMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultVendorNodeBwModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -96,14 +103,14 @@ func Test_defaultVendorNodeBwModel_Update(t *testing.T) {
 	defaultVendorNodeBwModel := NewVendorNodeBwModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.NodeMomentDataList
+		data *types.VendorNodeBw
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &nodeBwMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &vendorNodeBwMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

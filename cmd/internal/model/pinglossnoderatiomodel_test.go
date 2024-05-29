@@ -5,30 +5,32 @@ import (
 	"reflect"
 	"testing"
 
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
 
-var pingLossNodeRatioMockData = common.PingLossNodeRatio{
+var pingLossNodeRatioMockData = types.PingLossNodeRatio{
 	Id: "test",
-	PingLossRatio: map[string][]common.NodePingLossRatioUnit{
-		"line1": []common.NodePingLossRatioUnit{
-			common.NodePingLossRatioUnit{
-				NodeId: "testNodeId004",
-				Ratio:  0.01,
+	PingLossNodeRatioData: types.PingLossNodeRatioData{
+		PingLossRatio: map[string][]*types.NodePingLossRatioUnit{
+			"line1": []*types.NodePingLossRatioUnit{
+				&types.NodePingLossRatioUnit{
+					NodeId: "testNodeId004",
+					Ratio:  0.01,
+				},
+				&types.NodePingLossRatioUnit{
+					NodeId: "testNodeId005",
+					Ratio:  0.01,
+				},
 			},
-			common.NodePingLossRatioUnit{
-				NodeId: "testNodeId005",
-				Ratio:  0.01,
-			},
-		},
-		"line2": []common.NodePingLossRatioUnit{
-			common.NodePingLossRatioUnit{
-				NodeId: "testNodeId006",
-				Ratio:  0.01,
-			},
-			common.NodePingLossRatioUnit{
-				NodeId: "testNodeId007",
-				Ratio:  0.01,
+			"line2": []*types.NodePingLossRatioUnit{
+				&types.NodePingLossRatioUnit{
+					NodeId: "testNodeId006",
+					Ratio:  0.01,
+				},
+				&types.NodePingLossRatioUnit{
+					NodeId: "testNodeId007",
+					Ratio:  0.01,
+				},
 			},
 		},
 	},
@@ -65,7 +67,7 @@ func Test_defaultPingLossNodeRatioModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.PingLossNodeRatio
+		want    *types.PingLossNodeRatio
 		wantErr bool
 	}{
 		{
@@ -98,7 +100,7 @@ func Test_defaultPingLossNodeRatioModel_Insert(t *testing.T) {
 	defaultPingLossNodeRatioModel := NewPingLossNodeRatioModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.PingLossNodeRatio
+		data *types.PingLossNodeRatio
 	}
 	tests := []struct {
 		name    string
@@ -123,7 +125,7 @@ func Test_defaultPingLossNodeRatioModel_Update(t *testing.T) {
 	defaultPingLossNodeRatioModel := NewPingLossNodeRatioModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.PingLossNodeRatio
+		data *types.PingLossNodeRatio
 	}
 	tests := []struct {
 		name    string

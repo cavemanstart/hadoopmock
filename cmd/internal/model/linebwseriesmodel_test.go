@@ -5,37 +5,39 @@ import (
 	"reflect"
 	"testing"
 
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
 
-var lineBandWidthSeriesMockData = common.LineBandWidthSeries{
+var lineBWSeriesMockData = types.LineBWSeries{
 	Id: "test",
-	LineBandWidth: map[string][]common.MeasureCommonUnit{
-		"line1": []common.MeasureCommonUnit{
-			common.MeasureCommonUnit{
-				Time:      1708240500,
-				Bandwidth: 1200000,
+	LineBandWidthSeries: types.LineBandWidthSeries{
+		LineBandWidth: map[string][]*types.MeasureCommonUnit{
+			"line1": []*types.MeasureCommonUnit{
+				&types.MeasureCommonUnit{
+					Time:      1708240500,
+					Bandwidth: 1200000,
+				},
+				&types.MeasureCommonUnit{
+					Time:      1708240600,
+					Bandwidth: 1000000,
+				},
 			},
-			common.MeasureCommonUnit{
-				Time:      1708240600,
-				Bandwidth: 1000000,
-			},
-		},
-		"line2": []common.MeasureCommonUnit{
-			common.MeasureCommonUnit{
-				Time:      1708240800,
-				Bandwidth: 1200000,
-			},
-			common.MeasureCommonUnit{
-				Time:      1708240900,
-				Bandwidth: 1100000,
+			"line2": []*types.MeasureCommonUnit{
+				&types.MeasureCommonUnit{
+					Time:      1708240800,
+					Bandwidth: 1200000,
+				},
+				&types.MeasureCommonUnit{
+					Time:      1708240900,
+					Bandwidth: 1100000,
+				},
 			},
 		},
 	},
 }
 
-func Test_defaultLineBandWidthSeriesModel_DeleteById(t *testing.T) {
-	defaultLineBandWidthSeriesModel := NewLineBandWidthSeriesModel("mongodb://localhost:27017", "hadoopMock")
+func Test_defaultLineBWSeriesModel_DeleteById(t *testing.T) {
+	defaultLineBWSeriesModel := NewLineBWSeriesModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx context.Context
 		id  string
@@ -49,15 +51,15 @@ func Test_defaultLineBandWidthSeriesModel_DeleteById(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := defaultLineBandWidthSeriesModel.DeleteById(tt.args.ctx, tt.args.id); (err != nil) != tt.wantErr {
+			if err := defaultLineBWSeriesModel.DeleteById(tt.args.ctx, tt.args.id); (err != nil) != tt.wantErr {
 				t.Errorf("DeleteById() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
 }
 
-func Test_defaultLineBandWidthSeriesModel_FindById(t *testing.T) {
-	defaultLineBandWidthSeriesModel := NewLineBandWidthSeriesModel("mongodb://localhost:27017", "hadoopMock")
+func Test_defaultLineBWSeriesModel_FindById(t *testing.T) {
+	defaultLineBWSeriesModel := NewLineBWSeriesModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx context.Context
 		id  string
@@ -65,7 +67,7 @@ func Test_defaultLineBandWidthSeriesModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.LineBandWidthSeries
+		want    *types.LineBWSeries
 		wantErr bool
 	}{
 		{
@@ -74,13 +76,13 @@ func Test_defaultLineBandWidthSeriesModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &lineBandWidthSeriesMockData,
+			want:    &lineBWSeriesMockData,
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := defaultLineBandWidthSeriesModel.FindById(tt.args.ctx, tt.args.id)
+			got, err := defaultLineBWSeriesModel.FindById(tt.args.ctx, tt.args.id)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FindById() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -94,24 +96,24 @@ func Test_defaultLineBandWidthSeriesModel_FindById(t *testing.T) {
 	}
 }
 
-func Test_defaultLineBandWidthSeriesModel_Insert(t *testing.T) {
-	defaultLineBandWidthSeriesModel := NewLineBandWidthSeriesModel("mongodb://localhost:27017", "hadoopMock")
+func Test_defaultLineBWSeriesModel_Insert(t *testing.T) {
+	defaultLineBWSeriesModel := NewLineBWSeriesModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.LineBandWidthSeries
+		data *types.LineBWSeries
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &lineBandWidthSeriesMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &lineBWSeriesMockData}, false},
 	}
 	for _, tt := range tests {
-		res, _ := defaultLineBandWidthSeriesModel.FindById(tt.args.ctx, tt.args.data.Id)
+		res, _ := defaultLineBWSeriesModel.FindById(tt.args.ctx, tt.args.data.Id)
 		if res == nil {
 			t.Run(tt.name, func(t *testing.T) {
-				if err := defaultLineBandWidthSeriesModel.Insert(tt.args.ctx, tt.args.data); (err != nil) != tt.wantErr {
+				if err := defaultLineBWSeriesModel.Insert(tt.args.ctx, tt.args.data); (err != nil) != tt.wantErr {
 					t.Errorf("Insert() error = %v, wantErr %v", err, tt.wantErr)
 				}
 			})
@@ -119,22 +121,22 @@ func Test_defaultLineBandWidthSeriesModel_Insert(t *testing.T) {
 	}
 }
 
-func Test_defaultLineBandWidthSeriesModel_Update(t *testing.T) {
-	defaultLineBandWidthSeriesModel := NewLineBandWidthSeriesModel("mongodb://localhost:27017", "hadoopMock")
+func Test_defaultLineBWSeriesModel_Update(t *testing.T) {
+	defaultLineBWSeriesModel := NewLineBWSeriesModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.LineBandWidthSeries
+		data *types.LineBWSeries
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &lineBandWidthSeriesMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &lineBWSeriesMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := defaultLineBandWidthSeriesModel.Update(tt.args.ctx, tt.args.data); (err != nil) != tt.wantErr {
+			if err := defaultLineBWSeriesModel.Update(tt.args.ctx, tt.args.data); (err != nil) != tt.wantErr {
 				t.Errorf("Update() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

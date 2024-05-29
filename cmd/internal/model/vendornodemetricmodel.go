@@ -5,15 +5,16 @@ import (
 	"errors"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
 
 type (
 	VendorNodeMetricModel interface {
-		Insert(ctx context.Context, data *common.MeasureCommonData) error
-		Update(ctx context.Context, data *common.MeasureCommonData) error
+		Insert(ctx context.Context, data *types.VendorNodeMetric) error
+		Update(ctx context.Context, data *types.VendorNodeMetric) error
 		DeleteById(ctx context.Context, id string) error
-		FindById(ctx context.Context, id string) (*common.MeasureCommonData, error)
+		FindById(ctx context.Context, id string) (*types.VendorNodeMetric, error)
+		FindByFilter(ctx context.Context, filter string) (*types.VendorNodeMetric, error)
 	}
 	defaultVendorNodeMetricModel struct {
 		*mon.Model
@@ -26,11 +27,11 @@ func NewVendorNodeMetricModel(url string, db string) VendorNodeMetricModel {
 	}
 }
 
-func (m *defaultVendorNodeMetricModel) Insert(ctx context.Context, data *common.MeasureCommonData) error {
+func (m *defaultVendorNodeMetricModel) Insert(ctx context.Context, data *types.VendorNodeMetric) error {
 	_, err := m.InsertOne(ctx, data)
 	return err
 }
-func (m *defaultVendorNodeMetricModel) Update(ctx context.Context, data *common.MeasureCommonData) error {
+func (m *defaultVendorNodeMetricModel) Update(ctx context.Context, data *types.VendorNodeMetric) error {
 	filter := bson.M{
 		"_id": data.Id,
 	}
@@ -44,12 +45,24 @@ func (m *defaultVendorNodeMetricModel) DeleteById(ctx context.Context, id string
 	_, err := m.DeleteMany(ctx, filter)
 	return err
 }
-func (m *defaultVendorNodeMetricModel) FindById(ctx context.Context, id string) (*common.MeasureCommonData, error) {
+func (m *defaultVendorNodeMetricModel) FindById(ctx context.Context, id string) (*types.VendorNodeMetric, error) {
 	filter := bson.M{
 		"_id": id,
 	}
-	var res common.MeasureCommonData
+	var res types.VendorNodeMetric
 	err := m.FindOne(ctx, &res, filter)
+	switch {
+	case err == nil:
+		return &res, nil
+	case errors.Is(err, mon.ErrNotFound):
+		return nil, nil
+	default:
+		return nil, err
+	}
+}
+func (m *defaultVendorNodeMetricModel) FindByFilter(ctx context.Context, filter string) (*types.VendorNodeMetric, error) {
+	var res types.VendorNodeMetric
+	err := m.FindOne(ctx, &res, bson.M{"filter": filter})
 	switch {
 	case err == nil:
 		return &res, nil

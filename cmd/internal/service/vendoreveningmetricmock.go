@@ -1,20 +1,19 @@
-package mock
+package service
 
 import (
 	"github.com/zeromicro/go-zero/core/logx"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 	"math/rand"
-	"strconv"
 	"time"
 )
 
-func MockVendorEveningMetric(startDate string, endDate string) *common.MeasureCommonData {
+func MockVendorEveningMetric(startDate string, endDate string) *types.MeasureCommonData {
 	if startDate > endDate {
 		logx.Errorf("invalid input: %v > %v", startDate, endDate)
 		return nil
 	}
 	day := startDate
-	dayPeak := map[string]common.MeasureCommonUnit{}
+	dayPeak := map[string]*types.MeasureCommonUnit{}
 	sumBandwidth := int64(0)
 	endDay, err := time.ParseInLocation("2006-01-02", endDate, time.Local)
 	if err != nil {
@@ -28,7 +27,7 @@ func MockVendorEveningMetric(startDate string, endDate string) *common.MeasureCo
 		}
 		tmpBandwidth := baseBandwidth + rand.Int63n(rangeBandwidth)
 		sumBandwidth += tmpBandwidth
-		dayPeak[day] = common.MeasureCommonUnit{
+		dayPeak[day] = &types.MeasureCommonUnit{
 			Bandwidth: tmpBandwidth,
 			Time:      d.Unix() + 64800 + rand.Int63n(21600), //晚高峰时段
 		}
@@ -39,8 +38,7 @@ func MockVendorEveningMetric(startDate string, endDate string) *common.MeasureCo
 		}
 		cnt++
 	}
-	mockMeasureCommonData := common.MeasureCommonData{
-		Id:      idPrefix + strconv.FormatInt(time.Now().UnixMilli()+rand.Int63n(10000), 10),
+	mockMeasureCommonData := types.MeasureCommonData{
 		DayPeak: dayPeak,
 	}
 	return &mockMeasureCommonData

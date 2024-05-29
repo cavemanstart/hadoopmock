@@ -2,23 +2,28 @@ package model
 
 import (
 	"context"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 	"reflect"
 	"testing"
 )
 
 var (
-	nodeMomentDataList = []*common.NodeMomentData{
-		&common.NodeMomentData{
+	nodeMomentDataList = []*types.NodeMomentData{
+		&types.NodeMomentData{
 			NodeId:    "3279ng9438",
 			Bandwidth: 3200,
 		},
-		&common.NodeMomentData{
+		&types.NodeMomentData{
 			NodeId:    "n948790v438",
 			Bandwidth: 3000,
 		},
 	}
-	nodeBwMockData = common.NodeMomentDataList{Id: "test", NodeMomentDataList: nodeMomentDataList}
+	customerNodeBwMockData = types.CustomerNodeBw{
+		Id: "test",
+		NodeMomentDataList: types.NodeMomentDataList{
+			NodeMomentDataList: nodeMomentDataList,
+		},
+	}
 )
 
 func Test_defaultCustomerNodeBwModel_DeleteById(t *testing.T) {
@@ -52,7 +57,7 @@ func Test_defaultCustomerNodeBwModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.NodeMomentDataList
+		want    *types.CustomerNodeBw
 		wantErr bool
 	}{
 		{
@@ -61,7 +66,7 @@ func Test_defaultCustomerNodeBwModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &nodeBwMockData,
+			want:    &customerNodeBwMockData,
 			wantErr: false,
 		},
 	}
@@ -85,14 +90,14 @@ func Test_defaultCustomerNodeBwModel_Insert(t *testing.T) {
 	defaultCustomerNodeBwModel := NewCustomerNodeBwModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.NodeMomentDataList
+		data *types.CustomerNodeBw
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &nodeBwMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &customerNodeBwMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultCustomerNodeBwModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -110,14 +115,14 @@ func Test_defaultCustomerNodeBwModel_Update(t *testing.T) {
 	defaultCustomerNodeBwModel := NewCustomerNodeBwModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.NodeMomentDataList
+		data *types.CustomerNodeBw
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &nodeBwMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &customerNodeBwMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

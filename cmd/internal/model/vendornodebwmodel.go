@@ -5,15 +5,15 @@ import (
 	"errors"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
 
 type (
 	VendorNodeBwModel interface {
-		Insert(ctx context.Context, data *common.NodeMomentDataList) error
-		Update(ctx context.Context, data *common.NodeMomentDataList) error
+		Insert(ctx context.Context, data *types.VendorNodeBw) error
+		Update(ctx context.Context, data *types.VendorNodeBw) error
 		DeleteById(ctx context.Context, id string) error
-		FindById(ctx context.Context, id string) (*common.NodeMomentDataList, error)
+		FindById(ctx context.Context, id string) (*types.VendorNodeBw, error)
 	}
 	defaultVendorNodeBwModel struct {
 		*mon.Model
@@ -26,11 +26,11 @@ func NewVendorNodeBwModel(url string, db string) VendorNodeBwModel {
 	}
 }
 
-func (m *defaultVendorNodeBwModel) Insert(ctx context.Context, data *common.NodeMomentDataList) error {
+func (m *defaultVendorNodeBwModel) Insert(ctx context.Context, data *types.VendorNodeBw) error {
 	_, err := m.InsertOne(ctx, data)
 	return err
 }
-func (m *defaultVendorNodeBwModel) Update(ctx context.Context, data *common.NodeMomentDataList) error {
+func (m *defaultVendorNodeBwModel) Update(ctx context.Context, data *types.VendorNodeBw) error {
 	filter := bson.M{
 		"_id": data.Id,
 	}
@@ -44,11 +44,11 @@ func (m *defaultVendorNodeBwModel) DeleteById(ctx context.Context, id string) er
 	_, err := m.DeleteMany(ctx, filter)
 	return err
 }
-func (m *defaultVendorNodeBwModel) FindById(ctx context.Context, id string) (*common.NodeMomentDataList, error) {
+func (m *defaultVendorNodeBwModel) FindById(ctx context.Context, id string) (*types.VendorNodeBw, error) {
 	filter := bson.M{
 		"_id": id,
 	}
-	var res common.NodeMomentDataList
+	var res types.VendorNodeBw
 	err := m.FindOne(ctx, &res, filter)
 	switch {
 	case err == nil:

@@ -5,8 +5,15 @@ import (
 	"reflect"
 	"testing"
 
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
+
+var customerPerNodeMetricMockData = types.CustomerPerNodeMetric{
+	Id: "test-1110",
+	MeasureCommonDataNodes: types.MeasureCommonDataNodes{
+		NodeList: []*types.MeasureCommonDataPerNode{&perNodeMetricMockData},
+	},
+}
 
 func Test_defaultCustomerPerNodeMetricModel_DeleteById(t *testing.T) {
 	defaultCustomerPerNodeMetricModel := NewCustomerPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
@@ -39,7 +46,7 @@ func Test_defaultCustomerPerNodeMetricModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.MeasureCommonDataNodes
+		want    *types.CustomerPerNodeMetric
 		wantErr bool
 	}{
 		{
@@ -48,7 +55,7 @@ func Test_defaultCustomerPerNodeMetricModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &nodeListMockData,
+			want:    &customerPerNodeMetricMockData,
 			wantErr: false,
 		},
 	}
@@ -72,14 +79,14 @@ func Test_defaultCustomerPerNodeMetricModel_Insert(t *testing.T) {
 	defaultCustomerPerNodeMetricModel := NewCustomerPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonDataNodes
+		data *types.CustomerPerNodeMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &nodeListMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &customerPerNodeMetricMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultCustomerPerNodeMetricModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -97,14 +104,14 @@ func Test_defaultCustomerPerNodeMetricModel_Update(t *testing.T) {
 	defaultCustomerPerNodeMetricModel := NewCustomerPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonDataNodes
+		data *types.CustomerPerNodeMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &nodeListMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &customerPerNodeMetricMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

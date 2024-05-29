@@ -5,8 +5,15 @@ import (
 	"reflect"
 	"testing"
 
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
+
+var vendorEveningMetricMockData = types.VendorEveningMetric{
+	Id: "test",
+	MeasureCommonData: types.MeasureCommonData{
+		DayPeak: dayPeak, Peak: types.MeasureCommonUnit{Bandwidth: 5000},
+	},
+}
 
 func Test_defaultVendorEveningMetricModel_DeleteById(t *testing.T) {
 	defaultVendorEveningMetricModel := NewVendorEveningMetricModel("mongodb://localhost:27017", "hadoopMock")
@@ -39,7 +46,7 @@ func Test_defaultVendorEveningMetricModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.MeasureCommonData
+		want    *types.VendorEveningMetric
 		wantErr bool
 	}{
 		{
@@ -48,7 +55,7 @@ func Test_defaultVendorEveningMetricModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &nodeMetricMockData,
+			want:    &vendorEveningMetricMockData,
 			wantErr: false,
 		},
 	}
@@ -72,14 +79,14 @@ func Test_defaultVendorEveningMetricModel_Insert(t *testing.T) {
 	defaultVendorEveningMetricModel := NewVendorEveningMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonData
+		data *types.VendorEveningMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &nodeMetricMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &vendorEveningMetricMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultVendorEveningMetricModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -97,14 +104,14 @@ func Test_defaultVendorEveningMetricModel_Update(t *testing.T) {
 	defaultVendorEveningMetricModel := NewVendorEveningMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonData
+		data *types.VendorEveningMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &nodeMetricMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &vendorEveningMetricMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

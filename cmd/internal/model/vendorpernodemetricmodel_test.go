@@ -5,11 +5,16 @@ import (
 	"reflect"
 	"testing"
 
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
 
-var perNodeMetricMockData = common.MeasureCommonDataPerNode{NodeId: "test-123456", DayPeak: dayPeak, Peak: common.MeasureCommonUnit{Bandwidth: 5000}}
-var nodeListMockData = common.MeasureCommonDataNodes{Id: "test-1110", NodeList: []*common.MeasureCommonDataPerNode{&perNodeMetricMockData}}
+var perNodeMetricMockData = types.MeasureCommonDataPerNode{NodeId: "test-123456", DayPeak: dayPeak, Peak: types.MeasureCommonUnit{Bandwidth: 5000}}
+var vendorPerNodeMetricMockData = types.VendorPerNodeMetric{
+	Id: "test-1110",
+	MeasureCommonDataNodes: types.MeasureCommonDataNodes{
+		NodeList: []*types.MeasureCommonDataPerNode{&perNodeMetricMockData},
+	},
+}
 
 func Test_defaultVendorPerNodeMetricModel_DeleteById(t *testing.T) {
 	defaultVendorPerNodeMetricModel := NewVendorPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
@@ -42,7 +47,7 @@ func Test_defaultVendorPerNodeMetricModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.MeasureCommonDataNodes
+		want    *types.VendorPerNodeMetric
 		wantErr bool
 	}{
 		{
@@ -51,7 +56,7 @@ func Test_defaultVendorPerNodeMetricModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &nodeListMockData,
+			want:    &vendorPerNodeMetricMockData,
 			wantErr: false,
 		},
 	}
@@ -75,14 +80,14 @@ func Test_defaultVendorPerNodeMetricModel_Insert(t *testing.T) {
 	defaultVendorPerNodeMetricModel := NewVendorPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonDataNodes
+		data *types.VendorPerNodeMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &nodeListMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &vendorPerNodeMetricMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultVendorPerNodeMetricModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -100,14 +105,14 @@ func Test_defaultVendorPerNodeMetricModel_Update(t *testing.T) {
 	defaultVendorPerNodeMetricModel := NewVendorPerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonDataNodes
+		data *types.VendorPerNodeMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &nodeListMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &vendorPerNodeMetricMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

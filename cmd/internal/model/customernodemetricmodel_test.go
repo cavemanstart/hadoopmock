@@ -3,19 +3,24 @@ package model
 import (
 	"context"
 	"github.com/jinzhu/now"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 	"reflect"
 	"testing"
 )
 
 var (
-	dayPeak = map[string]common.MeasureCommonUnit{
+	dayPeak = map[string]*types.MeasureCommonUnit{
 		"2023-06-01": {Time: now.BeginningOfDay().Unix(), Bandwidth: 0},
 		"2023-06-02": {Time: now.BeginningOfDay().Unix(), Bandwidth: 0},
 		"2023-06-03": {Time: now.BeginningOfDay().Unix(), Bandwidth: 0},
 		"2023-06-04": {Time: now.BeginningOfDay().Unix(), Bandwidth: 0},
 	}
-	nodeMetricMockData = common.MeasureCommonData{Id: "test", DayPeak: dayPeak, Peak: common.MeasureCommonUnit{Bandwidth: 5000}}
+	customerNodeMetricMockData = types.CustomerNodeMetric{
+		Id: "test",
+		MeasureCommonData: types.MeasureCommonData{
+			DayPeak: dayPeak, Peak: types.MeasureCommonUnit{Bandwidth: 5000},
+		},
+	}
 )
 
 func Test_defaultCustomerNodeMetricModel_DeleteById(t *testing.T) {
@@ -49,7 +54,7 @@ func Test_defaultCustomerNodeMetricModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.MeasureCommonData
+		want    *types.CustomerNodeMetric
 		wantErr bool
 	}{
 		{
@@ -58,7 +63,7 @@ func Test_defaultCustomerNodeMetricModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &nodeMetricMockData,
+			want:    &customerNodeMetricMockData,
 			wantErr: false,
 		},
 	}
@@ -82,14 +87,14 @@ func Test_defaultCustomerNodeMetricModel_Insert(t *testing.T) {
 	defaultCustomerNodeMetricModel := NewCustomerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonData
+		data *types.CustomerNodeMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &nodeMetricMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &customerNodeMetricMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultCustomerNodeMetricModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -107,14 +112,14 @@ func Test_defaultCustomerNodeMetricModel_Update(t *testing.T) {
 	defaultCustomerNodeMetricModel := NewCustomerNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonData
+		data *types.CustomerNodeMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &nodeMetricMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &customerNodeMetricMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

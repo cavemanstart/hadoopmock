@@ -5,15 +5,15 @@ import (
 	"errors"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
 
 type (
 	CustomerEveningMetricModel interface {
-		Insert(ctx context.Context, data *common.MeasureCommonData) error
-		Update(ctx context.Context, data *common.MeasureCommonData) error
+		Insert(ctx context.Context, data *types.CustomerEveningMetric) error
+		Update(ctx context.Context, data *types.CustomerEveningMetric) error
 		DeleteById(ctx context.Context, id string) error
-		FindById(ctx context.Context, id string) (*common.MeasureCommonData, error)
+		FindById(ctx context.Context, id string) (*types.CustomerEveningMetric, error)
 	}
 	defaultCustomerEveningMetricModel struct {
 		*mon.Model
@@ -26,11 +26,11 @@ func NewCustomerEveningMetricModel(url string, db string) CustomerEveningMetricM
 	}
 }
 
-func (m *defaultCustomerEveningMetricModel) Insert(ctx context.Context, data *common.MeasureCommonData) error {
+func (m *defaultCustomerEveningMetricModel) Insert(ctx context.Context, data *types.CustomerEveningMetric) error {
 	_, err := m.InsertOne(ctx, data)
 	return err
 }
-func (m *defaultCustomerEveningMetricModel) Update(ctx context.Context, data *common.MeasureCommonData) error {
+func (m *defaultCustomerEveningMetricModel) Update(ctx context.Context, data *types.CustomerEveningMetric) error {
 	filter := bson.M{
 		"_id": data.Id,
 	}
@@ -44,11 +44,11 @@ func (m *defaultCustomerEveningMetricModel) DeleteById(ctx context.Context, id s
 	_, err := m.DeleteMany(ctx, filter)
 	return err
 }
-func (m *defaultCustomerEveningMetricModel) FindById(ctx context.Context, id string) (*common.MeasureCommonData, error) {
+func (m *defaultCustomerEveningMetricModel) FindById(ctx context.Context, id string) (*types.CustomerEveningMetric, error) {
 	filter := bson.M{
 		"_id": id,
 	}
-	var res common.MeasureCommonData
+	var res types.CustomerEveningMetric
 	err := m.FindOne(ctx, &res, filter)
 	switch {
 	case err == nil:

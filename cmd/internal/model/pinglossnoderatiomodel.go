@@ -5,15 +5,15 @@ import (
 	"errors"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
 
 type (
 	PingLossNodeRatioModel interface {
-		Insert(ctx context.Context, data *common.PingLossNodeRatio) error
-		Update(ctx context.Context, data *common.PingLossNodeRatio) error
+		Insert(ctx context.Context, data *types.PingLossNodeRatio) error
+		Update(ctx context.Context, data *types.PingLossNodeRatio) error
 		DeleteById(ctx context.Context, id string) error
-		FindById(ctx context.Context, id string) (*common.PingLossNodeRatio, error)
+		FindById(ctx context.Context, id string) (*types.PingLossNodeRatio, error)
 	}
 	defaultPingLossNodeRatioModel struct {
 		*mon.Model
@@ -26,11 +26,11 @@ func NewPingLossNodeRatioModel(url string, db string) PingLossNodeRatioModel {
 	}
 }
 
-func (m *defaultPingLossNodeRatioModel) Insert(ctx context.Context, data *common.PingLossNodeRatio) error {
+func (m *defaultPingLossNodeRatioModel) Insert(ctx context.Context, data *types.PingLossNodeRatio) error {
 	_, err := m.InsertOne(ctx, data)
 	return err
 }
-func (m *defaultPingLossNodeRatioModel) Update(ctx context.Context, data *common.PingLossNodeRatio) error {
+func (m *defaultPingLossNodeRatioModel) Update(ctx context.Context, data *types.PingLossNodeRatio) error {
 	filter := bson.M{
 		"_id": data.Id,
 	}
@@ -44,11 +44,11 @@ func (m *defaultPingLossNodeRatioModel) DeleteById(ctx context.Context, id strin
 	_, err := m.DeleteMany(ctx, filter)
 	return err
 }
-func (m *defaultPingLossNodeRatioModel) FindById(ctx context.Context, id string) (*common.PingLossNodeRatio, error) {
+func (m *defaultPingLossNodeRatioModel) FindById(ctx context.Context, id string) (*types.PingLossNodeRatio, error) {
 	filter := bson.M{
 		"_id": id,
 	}
-	var res common.PingLossNodeRatio
+	var res types.PingLossNodeRatio
 	err := m.FindOne(ctx, &res, filter)
 	switch {
 	case err == nil:

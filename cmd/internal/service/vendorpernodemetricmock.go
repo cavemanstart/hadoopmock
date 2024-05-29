@@ -1,14 +1,13 @@
-package mock
+package service
 
 import (
 	"github.com/zeromicro/go-zero/core/logx"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 	"math/rand"
-	"strconv"
 	"time"
 )
 
-func MockVendorPerNodeMetric(startDate string, endDate string, days int64, nodeIdList []string) *common.MeasureCommonDataNodes {
+func MockVendorPerNodeMetric(startDate string, endDate string, days int64, nodeIdList []string) *types.MeasureCommonDataNodes {
 	if startDate > endDate {
 		logx.Errorf("invalid input: %v > %v", startDate, endDate)
 		return nil
@@ -17,15 +16,15 @@ func MockVendorPerNodeMetric(startDate string, endDate string, days int64, nodeI
 	if err != nil {
 		logx.Errorf("parse api result err: %v", err)
 	}
-	list := []*common.MeasureCommonDataPerNode{}
+	list := []*types.MeasureCommonDataPerNode{}
 	for _, nodeId := range nodeIdList {
 		var cnt int64 = 0
-		curNodeData := common.MeasureCommonDataPerNode{}
+		curNodeData := types.MeasureCommonDataPerNode{}
 		curNodeData.NodeId = nodeId
 		day := startDate
-		dayPeak := map[string]common.MeasureCommonUnit{}
-		peak := common.MeasureCommonUnit{}
-		billPeak := common.MeasureCommonUnit{}
+		dayPeak := map[string]*types.MeasureCommonUnit{}
+		peak := types.MeasureCommonUnit{}
+		billPeak := types.MeasureCommonUnit{}
 		sumBandwidth := int64(0)
 		for {
 			d, err := time.ParseInLocation("2006-01-02", day, time.Local)
@@ -34,7 +33,7 @@ func MockVendorPerNodeMetric(startDate string, endDate string, days int64, nodeI
 			}
 			tmpBandwidth := baseBandwidth + rand.Int63n(rangeBandwidth)
 			sumBandwidth += tmpBandwidth
-			dayPeak[day] = common.MeasureCommonUnit{
+			dayPeak[day] = &types.MeasureCommonUnit{
 				Bandwidth: tmpBandwidth,
 				Time:      d.Unix() + rand.Int63n(86400), //一天有86400秒
 			}
@@ -54,8 +53,7 @@ func MockVendorPerNodeMetric(startDate string, endDate string, days int64, nodeI
 		curNodeData.BillPeak = billPeak
 		list = append(list, &curNodeData)
 	}
-	res := &common.MeasureCommonDataNodes{
-		Id:       idPrefix + strconv.FormatInt(time.Now().UnixMilli()+rand.Int63n(10000), 10),
+	res := &types.MeasureCommonDataNodes{
 		NodeList: list,
 	}
 	return res

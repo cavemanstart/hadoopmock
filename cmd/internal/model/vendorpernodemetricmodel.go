@@ -5,15 +5,15 @@ import (
 	"errors"
 	"github.com/zeromicro/go-zero/core/stores/mon"
 	"go.mongodb.org/mongo-driver/bson"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
 
 type (
 	VendorPerNodeMetricModel interface {
-		Insert(ctx context.Context, data *common.MeasureCommonDataNodes) error
-		Update(ctx context.Context, data *common.MeasureCommonDataNodes) error
+		Insert(ctx context.Context, data *types.VendorPerNodeMetric) error
+		Update(ctx context.Context, data *types.VendorPerNodeMetric) error
 		DeleteById(ctx context.Context, id string) error
-		FindById(ctx context.Context, id string) (*common.MeasureCommonDataNodes, error)
+		FindById(ctx context.Context, id string) (*types.VendorPerNodeMetric, error)
 	}
 	defaultVendorPerNodeMetricModel struct {
 		*mon.Model
@@ -26,11 +26,11 @@ func NewVendorPerNodeMetricModel(url string, db string) VendorPerNodeMetricModel
 	}
 }
 
-func (m *defaultVendorPerNodeMetricModel) Insert(ctx context.Context, data *common.MeasureCommonDataNodes) error {
+func (m *defaultVendorPerNodeMetricModel) Insert(ctx context.Context, data *types.VendorPerNodeMetric) error {
 	_, err := m.InsertOne(ctx, data)
 	return err
 }
-func (m *defaultVendorPerNodeMetricModel) Update(ctx context.Context, data *common.MeasureCommonDataNodes) error {
+func (m *defaultVendorPerNodeMetricModel) Update(ctx context.Context, data *types.VendorPerNodeMetric) error {
 	filter := bson.M{
 		"_id": data.Id,
 	}
@@ -44,11 +44,11 @@ func (m *defaultVendorPerNodeMetricModel) DeleteById(ctx context.Context, id str
 	_, err := m.DeleteMany(ctx, filter)
 	return err
 }
-func (m *defaultVendorPerNodeMetricModel) FindById(ctx context.Context, id string) (*common.MeasureCommonDataNodes, error) {
+func (m *defaultVendorPerNodeMetricModel) FindById(ctx context.Context, id string) (*types.VendorPerNodeMetric, error) {
 	filter := bson.M{
 		"_id": id,
 	}
-	var res common.MeasureCommonDataNodes
+	var res types.VendorPerNodeMetric
 	err := m.FindOne(ctx, &res, filter)
 	switch {
 	case err == nil:

@@ -5,8 +5,15 @@ import (
 	"reflect"
 	"testing"
 
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 )
+
+var vendorNodeMetricMockData = types.VendorNodeMetric{
+	Id: "test",
+	MeasureCommonData: types.MeasureCommonData{
+		DayPeak: dayPeak, Peak: types.MeasureCommonUnit{Bandwidth: 5000},
+	},
+}
 
 func Test_defaultVendorNodeMetricModel_DeleteById(t *testing.T) {
 	defaultVendorNodeMetricModel := NewVendorNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
@@ -39,7 +46,7 @@ func Test_defaultVendorNodeMetricModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.MeasureCommonData
+		want    *types.VendorNodeMetric
 		wantErr bool
 	}{
 		{
@@ -48,7 +55,7 @@ func Test_defaultVendorNodeMetricModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &nodeMetricMockData,
+			want:    &vendorNodeMetricMockData,
 			wantErr: false,
 		},
 	}
@@ -72,14 +79,14 @@ func Test_defaultVendorNodeMetricModel_Insert(t *testing.T) {
 	defaultVendorNodeMetricModel := NewVendorNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonData
+		data *types.VendorNodeMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &nodeMetricMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &vendorNodeMetricMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultVendorNodeMetricModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -97,14 +104,14 @@ func Test_defaultVendorNodeMetricModel_Update(t *testing.T) {
 	defaultVendorNodeMetricModel := NewVendorNodeMetricModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonData
+		data *types.VendorNodeMetric
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &nodeMetricMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &vendorNodeMetricMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

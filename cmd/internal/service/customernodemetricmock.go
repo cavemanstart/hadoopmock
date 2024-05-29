@@ -1,29 +1,21 @@
-package mock
+package service
 
 import (
-	"math/rand"
-	"strconv"
-	"time"
-
 	"github.com/zeromicro/go-zero/core/logx"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
+	"math/rand"
+	"time"
 )
 
-var (
-	baseBandwidth  int64  = 20000000000
-	rangeBandwidth int64  = 10000000000
-	idPrefix       string = "test-"
-)
-
-func MockVendorNodeMetric(startDate string, endDate string, days int64) *common.MeasureCommonData {
+func MockCustomerNodeMetric(startDate string, endDate string, days int64) *types.MeasureCommonData {
 	if startDate > endDate {
 		logx.Errorf("invalid input: %v > %v", startDate, endDate)
 		return nil
 	}
 	day := startDate
-	dayPeak := map[string]common.MeasureCommonUnit{}
-	peak := common.MeasureCommonUnit{}
-	billPeak := common.MeasureCommonUnit{}
+	dayPeak := map[string]*types.MeasureCommonUnit{}
+	peak := types.MeasureCommonUnit{}
+	billPeak := types.MeasureCommonUnit{}
 	sumBandwidth := int64(0)
 	endDay, err := time.ParseInLocation("2006-01-02", endDate, time.Local)
 	if err != nil {
@@ -37,7 +29,7 @@ func MockVendorNodeMetric(startDate string, endDate string, days int64) *common.
 		}
 		tmpBandwidth := baseBandwidth + rand.Int63n(rangeBandwidth)
 		sumBandwidth += tmpBandwidth
-		dayPeak[day] = common.MeasureCommonUnit{
+		dayPeak[day] = &types.MeasureCommonUnit{
 			Bandwidth: tmpBandwidth,
 			Time:      d.Unix() + rand.Int63n(86400), //一天有86400秒
 		}
@@ -52,8 +44,7 @@ func MockVendorNodeMetric(startDate string, endDate string, days int64) *common.
 	peak.Time = dayPeak[startDate].Time
 	billPeak.Bandwidth = sumBandwidth / days
 	billPeak.Time = peak.Time
-	mockMeasureCommonData := common.MeasureCommonData{
-		Id:       idPrefix + strconv.FormatInt(time.Now().UnixMilli()+rand.Int63n(10000), 10),
+	mockMeasureCommonData := types.MeasureCommonData{
 		DayPeak:  dayPeak,
 		Peak:     peak,
 		BillPeak: billPeak,

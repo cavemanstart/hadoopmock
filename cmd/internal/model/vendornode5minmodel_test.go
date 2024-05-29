@@ -2,10 +2,17 @@ package model
 
 import (
 	"context"
-	"hadoopmock/cmd/internal/common"
+	"hadoopmock/cmd/internal/types"
 	"reflect"
 	"testing"
 )
+
+var vendorNode5MinMockData = types.VendorNode5Min{
+	Id: "test",
+	MeasureCommonUnitList: types.MeasureCommonUnitList{
+		MeasureCommonUnitList: measureCommonUnitList,
+	},
+}
 
 func Test_defaultVendorNode5MinModel_DeleteById(t *testing.T) {
 	defaultVendorNode5MinModel := NewVendorNode5MinModel("mongodb://localhost:27017", "hadoopMock")
@@ -38,7 +45,7 @@ func Test_defaultVendorNode5MinModel_FindById(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *common.MeasureCommonUnitList
+		want    *types.VendorNode5Min
 		wantErr bool
 	}{
 		{
@@ -47,7 +54,7 @@ func Test_defaultVendorNode5MinModel_FindById(t *testing.T) {
 				ctx: context.Background(),
 				id:  "test",
 			},
-			want:    &node5MinMockData,
+			want:    &vendorNode5MinMockData,
 			wantErr: false,
 		},
 	}
@@ -71,14 +78,14 @@ func Test_defaultVendorNode5MinModel_Insert(t *testing.T) {
 	defaultVendorNode5MinModel := NewVendorNode5MinModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonUnitList
+		data *types.VendorNode5Min
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"case1", args{ctx: context.Background(), data: &node5MinMockData}, false},
+		{"case1", args{ctx: context.Background(), data: &vendorNode5MinMockData}, false},
 	}
 	for _, tt := range tests {
 		res, _ := defaultVendorNode5MinModel.FindById(tt.args.ctx, tt.args.data.Id)
@@ -96,14 +103,14 @@ func Test_defaultVendorNode5MinModel_Update(t *testing.T) {
 	defaultVendorNode5MinModel := NewVendorNode5MinModel("mongodb://localhost:27017", "hadoopMock")
 	type args struct {
 		ctx  context.Context
-		data *common.MeasureCommonUnitList
+		data *types.VendorNode5Min
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{name: "case3", args: args{ctx: context.Background(), data: &node5MinMockData}, wantErr: false},
+		{name: "case3", args: args{ctx: context.Background(), data: &vendorNode5MinMockData}, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
