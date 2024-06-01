@@ -9,47 +9,62 @@ import (
 )
 
 type (
-	LineMomentBWModel interface {
-		Insert(ctx context.Context, data *types.LineMomentBW) error
-		Update(ctx context.Context, data *types.LineMomentBW) error
+	LineMomentBwModel interface {
+		Insert(ctx context.Context, data *types.LineMomentBw) error
+		Update(ctx context.Context, data *types.LineMomentBw) error
 		DeleteById(ctx context.Context, id string) error
-		FindById(ctx context.Context, id string) (*types.LineMomentBW, error)
+		FindById(ctx context.Context, id string) (*types.LineMomentBw, error)
+		FindByFilter(ctx context.Context, filter string) (*types.LineMomentBw, error)
 	}
-	defaultLineMomentBWModel struct {
+	defaultLineMomentBwModel struct {
 		*mon.Model
 	}
 )
 
-func NewLineMomentBWModel(url string, db string) LineMomentBWModel {
-	return &defaultLineMomentBWModel{
-		Model: mon.MustNewModel(url, db, "vendorNodeMetric"),
+func NewLineMomentBwModel(url string, db string) LineMomentBwModel {
+	return &defaultLineMomentBwModel{
+		Model: mon.MustNewModel(url, db, "lineMomentBw"),
 	}
 }
 
-func (m *defaultLineMomentBWModel) Insert(ctx context.Context, data *types.LineMomentBW) error {
+func (m *defaultLineMomentBwModel) Insert(ctx context.Context, data *types.LineMomentBw) error {
 	_, err := m.InsertOne(ctx, data)
 	return err
 }
-func (m *defaultLineMomentBWModel) Update(ctx context.Context, data *types.LineMomentBW) error {
+func (m *defaultLineMomentBwModel) Update(ctx context.Context, data *types.LineMomentBw) error {
 	filter := bson.M{
 		"_id": data.Id,
 	}
 	_, err := m.UpdateOne(ctx, filter, bson.M{"$set": data})
 	return err
 }
-func (m *defaultLineMomentBWModel) DeleteById(ctx context.Context, id string) error {
+func (m *defaultLineMomentBwModel) DeleteById(ctx context.Context, id string) error {
 	filter := bson.M{
 		"_id": id,
 	}
 	_, err := m.DeleteMany(ctx, filter)
 	return err
 }
-func (m *defaultLineMomentBWModel) FindById(ctx context.Context, id string) (*types.LineMomentBW, error) {
+func (m *defaultLineMomentBwModel) FindById(ctx context.Context, id string) (*types.LineMomentBw, error) {
 	filter := bson.M{
 		"_id": id,
 	}
-	var res types.LineMomentBW
+	var res types.LineMomentBw
 	err := m.FindOne(ctx, &res, filter)
+	switch {
+	case err == nil:
+		return &res, nil
+	case errors.Is(err, mon.ErrNotFound):
+		return nil, nil
+	default:
+		return nil, err
+	}
+}
+func (m *defaultLineMomentBwModel) FindByFilter(ctx context.Context, filter string) (*types.LineMomentBw, error) {
+	var res types.LineMomentBw
+	err := m.FindOne(ctx, &res, bson.M{
+		"filter": filter,
+	})
 	switch {
 	case err == nil:
 		return &res, nil

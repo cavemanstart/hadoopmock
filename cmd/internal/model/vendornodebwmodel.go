@@ -14,6 +14,7 @@ type (
 		Update(ctx context.Context, data *types.VendorNodeBw) error
 		DeleteById(ctx context.Context, id string) error
 		FindById(ctx context.Context, id string) (*types.VendorNodeBw, error)
+		FindByFilter(ctx context.Context, filter string) (*types.VendorNodeBw, error)
 	}
 	defaultVendorNodeBwModel struct {
 		*mon.Model
@@ -50,6 +51,20 @@ func (m *defaultVendorNodeBwModel) FindById(ctx context.Context, id string) (*ty
 	}
 	var res types.VendorNodeBw
 	err := m.FindOne(ctx, &res, filter)
+	switch {
+	case err == nil:
+		return &res, nil
+	case errors.Is(err, mon.ErrNotFound):
+		return nil, nil
+	default:
+		return nil, err
+	}
+}
+func (m *defaultVendorNodeBwModel) FindByFilter(ctx context.Context, filter string) (*types.VendorNodeBw, error) {
+	var res types.VendorNodeBw
+	err := m.FindOne(ctx, &res, bson.M{
+		"filter": filter,
+	})
 	switch {
 	case err == nil:
 		return &res, nil

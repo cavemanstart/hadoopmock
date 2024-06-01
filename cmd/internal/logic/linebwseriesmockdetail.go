@@ -12,35 +12,36 @@ import (
 	"strconv"
 )
 
-type VendorNodeMetricDetailLogic struct {
+type LineBwSeriesDetailLogic struct {
 	logx.Logger
 	ctx context.Context
 }
 
-func NewVendorNodeMetricDetailLogic(ctx context.Context) *VendorNodeMetricDetailLogic {
-	return &VendorNodeMetricDetailLogic{
+func NewLineBwSeriesDetailLogic(ctx context.Context) *LineBwSeriesDetailLogic {
+	return &LineBwSeriesDetailLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 	}
 }
-func (l *VendorNodeMetricDetailLogic) VendorNodeMetricMockDetail(mgo *config.Mongo, req *types.PostVendorNodeMetricReq) (resp *types.HadoopResp[types.MeasureCommonData], err error) {
-	resp = &types.HadoopResp[types.MeasureCommonData]{} //初始化
-	m := model.NewVendorNodeMetricModel(mgo.MongoUrl, mgo.MongoDatabase)
-	filter := req.Start + req.End + strconv.FormatInt(req.BillDays, 10)
+func (l *LineBwSeriesDetailLogic) LineBwSeriesDetailMockLogic(mgo *config.Mongo, req *types.PostLineBwSeriesReq) (resp *types.HadoopResp[types.LineBandWidthSeries], err error) {
+	resp = &types.HadoopResp[types.LineBandWidthSeries]{} //初始化
+	m := model.NewLineBwSeriesModel(mgo.MongoUrl, mgo.MongoDatabase)
+	lines := []string{"line1", "line2"}
+	filter := strconv.FormatInt(req.Start, 10) + strconv.FormatInt(req.End, 10)
 	data, _ := m.FindByFilter(context.Background(), filter)
 	if data == nil { //数据库中没有
-		mockData := service.MockVendorNodeMetric(req.Start, req.End, req.BillDays)
+		mockData := service.MockLineBwSeries(lines, req.Start, req.End)
 		if mockData == nil {
 			resp.Code = util.MockErr.Code
 			resp.Error = util.MockErr.Msg
 			return resp, errors.New("mock data nil")
 		}
 		//写入数据库
-		vendorNodeMetric := types.VendorNodeMetric{
-			Filter:            filter,
-			MeasureCommonData: *mockData,
+		LineBwSeries := types.LineBwSeries{
+			Filter:              filter,
+			LineBandWidthSeries: *mockData,
 		}
-		err = m.Insert(context.Background(), &vendorNodeMetric)
+		err = m.Insert(context.Background(), &LineBwSeries)
 		if err != nil {
 			resp.Code = util.DbErr.Code
 			resp.Error = util.DbErr.Msg
@@ -51,7 +52,7 @@ func (l *VendorNodeMetricDetailLogic) VendorNodeMetricMockDetail(mgo *config.Mon
 		resp.Error = ""
 		return resp, nil
 	} else { //数据库中已经存在
-		resp.Data = &data.MeasureCommonData
+		resp.Data = &data.LineBandWidthSeries
 		resp.Code = util.Success.Code
 		resp.Error = ""
 		return resp, nil

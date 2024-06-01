@@ -12,35 +12,35 @@ import (
 	"strconv"
 )
 
-type VendorNodeMetricDetailLogic struct {
+type CustomerNodeMetricDetailLogic struct {
 	logx.Logger
 	ctx context.Context
 }
 
-func NewVendorNodeMetricDetailLogic(ctx context.Context) *VendorNodeMetricDetailLogic {
-	return &VendorNodeMetricDetailLogic{
+func NewCustomerNodeMetricDetailLogic(ctx context.Context) *CustomerNodeMetricDetailLogic {
+	return &CustomerNodeMetricDetailLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 	}
 }
-func (l *VendorNodeMetricDetailLogic) VendorNodeMetricMockDetail(mgo *config.Mongo, req *types.PostVendorNodeMetricReq) (resp *types.HadoopResp[types.MeasureCommonData], err error) {
+func (l *CustomerNodeMetricDetailLogic) CustomerNodeMetricDetail(mgo *config.Mongo, req *types.PostCustomerMeasureReq) (resp *types.HadoopResp[types.MeasureCommonData], err error) {
 	resp = &types.HadoopResp[types.MeasureCommonData]{} //初始化
-	m := model.NewVendorNodeMetricModel(mgo.MongoUrl, mgo.MongoDatabase)
-	filter := req.Start + req.End + strconv.FormatInt(req.BillDays, 10)
+	m := model.NewCustomerNodeMetricModel(mgo.MongoUrl, mgo.MongoDatabase)
+	filter := req.Start + req.End + strconv.Itoa(req.BillDays)
 	data, _ := m.FindByFilter(context.Background(), filter)
 	if data == nil { //数据库中没有
-		mockData := service.MockVendorNodeMetric(req.Start, req.End, req.BillDays)
+		mockData := service.MockCustomerNodeMetric(req.Start, req.End, int64(req.BillDays))
 		if mockData == nil {
 			resp.Code = util.MockErr.Code
 			resp.Error = util.MockErr.Msg
 			return resp, errors.New("mock data nil")
 		}
 		//写入数据库
-		vendorNodeMetric := types.VendorNodeMetric{
+		CustomerNodeMetric := types.CustomerNodeMetric{
 			Filter:            filter,
 			MeasureCommonData: *mockData,
 		}
-		err = m.Insert(context.Background(), &vendorNodeMetric)
+		err = m.Insert(context.Background(), &CustomerNodeMetric)
 		if err != nil {
 			resp.Code = util.DbErr.Code
 			resp.Error = util.DbErr.Msg

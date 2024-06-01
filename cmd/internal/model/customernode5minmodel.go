@@ -14,6 +14,7 @@ type (
 		Update(ctx context.Context, data *types.CustomerNode5Min) error
 		DeleteById(ctx context.Context, id string) error
 		FindById(ctx context.Context, id string) (*types.CustomerNode5Min, error)
+		FindByFilter(ctx context.Context, filter string) (*types.CustomerNode5Min, error)
 	}
 	defaultCustomerNode5MinModel struct {
 		*mon.Model
@@ -22,7 +23,7 @@ type (
 
 func NewCustomerNode5MinModel(url string, db string) CustomerNode5MinModel {
 	return &defaultCustomerNode5MinModel{
-		Model: mon.MustNewModel(url, db, "CustomerNode5min"),
+		Model: mon.MustNewModel(url, db, "customerNode5min"),
 	}
 }
 
@@ -50,6 +51,20 @@ func (m *defaultCustomerNode5MinModel) FindById(ctx context.Context, id string) 
 	}
 	var res types.CustomerNode5Min
 	err := m.FindOne(ctx, &res, filter)
+	switch {
+	case err == nil:
+		return &res, nil
+	case errors.Is(err, mon.ErrNotFound):
+		return nil, nil
+	default:
+		return nil, err
+	}
+}
+func (m *defaultCustomerNode5MinModel) FindByFilter(ctx context.Context, filter string) (*types.CustomerNode5Min, error) {
+	var res types.CustomerNode5Min
+	err := m.FindOne(ctx, &res, bson.M{
+		"filter": filter,
+	})
 	switch {
 	case err == nil:
 		return &res, nil

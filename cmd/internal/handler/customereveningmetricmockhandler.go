@@ -8,15 +8,15 @@ import (
 	"net/http"
 )
 
-func VendorNodeMetricMockHandler(mgo *config.Mongo) http.HandlerFunc {
+func CustomerEveningMetricMockHandler(mgo *config.Mongo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.PostVendorNodeMetricReq
+		var req types.PostCustomerEveningMetricReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-		l := logic.NewVendorNodeMetricDetailLogic(r.Context())
-		resp, err := l.VendorNodeMetricMockDetail(mgo, &req)
+		l := logic.NewCustomerEveningMetricDetailLogic(r.Context())
+		resp, err := l.CustomerEveningMetricMockDetail(mgo, &req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

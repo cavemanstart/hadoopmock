@@ -14,6 +14,7 @@ type (
 		Update(ctx context.Context, data *types.VendorNode5Min) error
 		DeleteById(ctx context.Context, id string) error
 		FindById(ctx context.Context, id string) (*types.VendorNode5Min, error)
+		FindByFilter(ctx context.Context, filter string) (*types.VendorNode5Min, error)
 	}
 	defaultVendorNode5MinModel struct {
 		*mon.Model
@@ -50,6 +51,20 @@ func (m *defaultVendorNode5MinModel) FindById(ctx context.Context, id string) (*
 	}
 	var res types.VendorNode5Min
 	err := m.FindOne(ctx, &res, filter)
+	switch {
+	case err == nil:
+		return &res, nil
+	case errors.Is(err, mon.ErrNotFound):
+		return nil, nil
+	default:
+		return nil, err
+	}
+}
+func (m *defaultVendorNode5MinModel) FindByFilter(ctx context.Context, filter string) (*types.VendorNode5Min, error) {
+	var res types.VendorNode5Min
+	err := m.FindOne(ctx, &res, bson.M{
+		"filter": filter,
+	})
 	switch {
 	case err == nil:
 		return &res, nil

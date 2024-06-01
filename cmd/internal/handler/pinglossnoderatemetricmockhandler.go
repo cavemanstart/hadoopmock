@@ -8,15 +8,15 @@ import (
 	"net/http"
 )
 
-func VendorNodeMetricMockHandler(mgo *config.Mongo) http.HandlerFunc {
+func PingLossNodeRateMockHandler(mgo *config.Mongo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.PostVendorNodeMetricReq
+		var req types.PostPingLossNodeRateReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-		l := logic.NewVendorNodeMetricDetailLogic(r.Context())
-		resp, err := l.VendorNodeMetricMockDetail(mgo, &req)
+		l := logic.NewPingLossNodeRateDetailLogic(r.Context())
+		resp, err := l.PingLossNodeRateMockDetail(mgo, &req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

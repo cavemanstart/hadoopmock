@@ -14,6 +14,7 @@ type (
 		Update(ctx context.Context, data *types.CustomerEveningMetric) error
 		DeleteById(ctx context.Context, id string) error
 		FindById(ctx context.Context, id string) (*types.CustomerEveningMetric, error)
+		FindByFilter(ctx context.Context, filter string) (*types.CustomerEveningMetric, error)
 	}
 	defaultCustomerEveningMetricModel struct {
 		*mon.Model
@@ -22,7 +23,7 @@ type (
 
 func NewCustomerEveningMetricModel(url string, db string) CustomerEveningMetricModel {
 	return &defaultCustomerEveningMetricModel{
-		Model: mon.MustNewModel(url, db, "CustomerEveningMetric"),
+		Model: mon.MustNewModel(url, db, "customerEveningMetric"),
 	}
 }
 
@@ -50,6 +51,20 @@ func (m *defaultCustomerEveningMetricModel) FindById(ctx context.Context, id str
 	}
 	var res types.CustomerEveningMetric
 	err := m.FindOne(ctx, &res, filter)
+	switch {
+	case err == nil:
+		return &res, nil
+	case errors.Is(err, mon.ErrNotFound):
+		return nil, nil
+	default:
+		return nil, err
+	}
+}
+func (m *defaultCustomerEveningMetricModel) FindByFilter(ctx context.Context, filter string) (*types.CustomerEveningMetric, error) {
+	var res types.CustomerEveningMetric
+	err := m.FindOne(ctx, &res, bson.M{
+		"filter": filter,
+	})
 	switch {
 	case err == nil:
 		return &res, nil

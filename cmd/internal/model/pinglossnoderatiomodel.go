@@ -14,6 +14,7 @@ type (
 		Update(ctx context.Context, data *types.PingLossNodeRatio) error
 		DeleteById(ctx context.Context, id string) error
 		FindById(ctx context.Context, id string) (*types.PingLossNodeRatio, error)
+		FindByFilter(ctx context.Context, filter string) (*types.PingLossNodeRatio, error)
 	}
 	defaultPingLossNodeRatioModel struct {
 		*mon.Model
@@ -22,7 +23,7 @@ type (
 
 func NewPingLossNodeRatioModel(url string, db string) PingLossNodeRatioModel {
 	return &defaultPingLossNodeRatioModel{
-		Model: mon.MustNewModel(url, db, "vendorNodeMetric"),
+		Model: mon.MustNewModel(url, db, "pingLossNodeRatio"),
 	}
 }
 
@@ -50,6 +51,20 @@ func (m *defaultPingLossNodeRatioModel) FindById(ctx context.Context, id string)
 	}
 	var res types.PingLossNodeRatio
 	err := m.FindOne(ctx, &res, filter)
+	switch {
+	case err == nil:
+		return &res, nil
+	case errors.Is(err, mon.ErrNotFound):
+		return nil, nil
+	default:
+		return nil, err
+	}
+}
+func (m *defaultPingLossNodeRatioModel) FindByFilter(ctx context.Context, filter string) (*types.PingLossNodeRatio, error) {
+	var res types.PingLossNodeRatio
+	err := m.FindOne(ctx, &res, bson.M{
+		"filter": filter,
+	})
 	switch {
 	case err == nil:
 		return &res, nil

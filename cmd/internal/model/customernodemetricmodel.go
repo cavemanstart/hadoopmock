@@ -14,6 +14,7 @@ type (
 		Update(ctx context.Context, data *types.CustomerNodeMetric) error
 		DeleteById(ctx context.Context, id string) error
 		FindById(ctx context.Context, id string) (*types.CustomerNodeMetric, error)
+		FindByFilter(ctx context.Context, filter string) (*types.CustomerNodeMetric, error)
 	}
 	defaultCustomerNodeMetricModel struct {
 		*mon.Model
@@ -50,6 +51,18 @@ func (m *defaultCustomerNodeMetricModel) FindById(ctx context.Context, id string
 	}
 	var res types.CustomerNodeMetric
 	err := m.FindOne(ctx, &res, filter)
+	switch {
+	case err == nil:
+		return &res, nil
+	case errors.Is(err, mon.ErrNotFound):
+		return nil, nil
+	default:
+		return nil, err
+	}
+}
+func (m *defaultCustomerNodeMetricModel) FindByFilter(ctx context.Context, filter string) (*types.CustomerNodeMetric, error) {
+	var res types.CustomerNodeMetric
+	err := m.FindOne(ctx, &res, bson.M{"filter": filter})
 	switch {
 	case err == nil:
 		return &res, nil
