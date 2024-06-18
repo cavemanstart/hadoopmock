@@ -1,0 +1,4 @@
+MongoUrl: "mongodb://localhost:27017"
+MongoDatabase: "hadoopMock"
+Host: "localhost"
+Port: 8080
